@@ -52,7 +52,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 				++collisions;
 			}
 			if(!found)
-				overflowArea.add(new HashTableNode<K,V>(key,get(key)));
+				b.add(new HashTableNode<K,V>(key,get(key)));
 		}
 
 	}
@@ -62,17 +62,14 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 		if(maxLoadFactorExceeded())
 		{
 			int newSize = list.length*increment_factor;
-			
 			@SuppressWarnings("unchecked")
 			HashTableNode<K,V>[] lists = (HashTableNode<K, V>[])new HashTableNode[newSize];
 			LinkedList<HashTableNode<K,V>> overflow = new LinkedList<HashTableNode<K,V>>();
-			boolean[] new_tombstone = new boolean[newSize];
 			slotNumberFunction = newSize;
-			collisions = 0;
 			rehashing(lists,overflow);
 			list = lists;
 			overflowArea = overflow;
-			tombstone = new_tombstone;
+			tombstone = new boolean[newSize];
 			slotNumber = newSize;
 			put(key,value);
 		} else {
@@ -84,7 +81,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 				for (int i=0;i<bucketSize;i++) {
 					if(list[start_position+i]!=null)
 					{
-						if(list[start_position+i].getKey().hashCode()==key.hashCode())
+						if(list[start_position+i].getKey().equals(key))
 						{
 							list[start_position+i].setValue(value);;
 							found = true;
@@ -96,7 +93,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 				if(!found)
 				{
 					for (HashTableNode<K,V> x: overflowArea) {
-						if(x.hashCode()==key.hashCode())
+						if(x.equals(key))
 						{
 							x.setValue(value);
 							break;
@@ -118,7 +115,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 				if(!found)
 					overflowArea.add(new HashTableNode<K,V>(key,value));
 				// increase the number of the elements
-				elementsNumber++;
+				++elementsNumber;
 			}
 		}	
 	}
@@ -146,7 +143,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 
 		if (inOverFlowArea) {
 			for (HashTableNode<K,V> x: overflowArea) {
-				if(x.getKey().hashCode()==key.hashCode())
+				if(x.getKey().equals(key))
 					return x.getValue();
 			}
 		}
@@ -167,7 +164,7 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 				node = list[start_position+i];
 				if(node!=null)
 				{
-					if(node.getKey().hashCode()==key.hashCode())
+					if(node.getKey().equals(key))
 					{
 						list[start_position+i] = null;
 						tombstone[start_position+i] = true;
@@ -176,15 +173,13 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 					}
 				} else if(node==null&tombstone[start_position+i]) {
 					inOverFlowArea = true;
-				} else {
-					return ;
 				}
 			}
 
 			if (inOverFlowArea) {
 				for (int i=0;i<overflowArea.size();i++) {
 					node = overflowArea.get(i);
-					if(node.getKey().hashCode()==key.hashCode())
+					if(node.getKey().equals(key))
 					{
 						overflowArea.remove(i);
 						--elementsNumber ;
@@ -200,30 +195,25 @@ public class Bucketing<K,V> implements HashTable<K, V> {
 	public boolean contains(K key) {
 		int start_position = hashFunction(key);
 		HashTableNode<K,V> node ;
-		boolean inOverFlowList = false;
 		for (int i=0;i<bucketSize;i++) {
 			node = list[start_position+i];
-			if (node!=null) {
-				if(node.getKey().hashCode()==key.hashCode())
-				{
-					return true;
-				}
-			} else if(node==null&tombstone[start_position+i]){
-				inOverFlowList = true;
+			
+			if(node==null)
+			{
+				if(!tombstone[start_position+i])
+					return false;
 			} else {
-				return false;
-			}
-		}
-
-		if(inOverFlowList)
-		{
-			for (HashTableNode<K,V> x: overflowArea) {
-				if(x.getKey().hashCode()==key.hashCode())
+				if(node.getKey().equals(key))
 					return true;
 			}
 		}
-
-
+		
+		for (HashTableNode<K,V> x: overflowArea) {
+			if(x.getKey().equals(key))
+				return true;
+		}
+		
+		
 		return false;
 	}
 

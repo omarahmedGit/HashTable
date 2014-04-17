@@ -78,7 +78,7 @@ public class LinearProbing<K,V> implements HashTable<K, V> {
 				{
 					if(prob[i]!=null)
 					{
-						if(prob[i].getKey().hashCode()==key.hashCode())
+						if(prob[i].getKey().equals(key))
 						{
 							prob[i].setValue(value);
 							return ;
@@ -120,7 +120,7 @@ public class LinearProbing<K,V> implements HashTable<K, V> {
 				if(!tombstone[i])
 					return null ;
 			} else {
-				if(prob[i].getKey().hashCode()==key.hashCode())
+				if(prob[i].getKey().equals(key))
 				{
 					return prob[i].getValue();
 				}
@@ -146,7 +146,7 @@ public class LinearProbing<K,V> implements HashTable<K, V> {
 					if(!tombstone[i])
 						return ;
 				} else {
-					if(prob[i].getKey().hashCode()==key.hashCode())
+					if(prob[i].getKey().equals(key))
 					{
 						tombstone[i] = true;
 						prob[i]=null;
@@ -169,7 +169,7 @@ public class LinearProbing<K,V> implements HashTable<K, V> {
 			back = true;
 			if(prob[i]==null)
 				return false;
-			else if(prob[i].getKey().hashCode()==key.hashCode())
+			else if(prob[i].getKey().equals(key))
 				return true;
 			i=(i+step)%sloteNumber;
 		}

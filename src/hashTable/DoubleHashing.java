@@ -17,7 +17,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 
 	public DoubleHashing()
 	{
-		// initializing the paramters :))
+		// initializing the parameters :))
 		@SuppressWarnings("unchecked")
 		HashTableNode<K,V>[] list = (HashTableNode<K, V>[])new HashTableNode[initial_size];
 		doubleHashing = list ;
@@ -94,7 +94,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 				
 				if(doubleHashing[position]!=null)
 				{
-					if(doubleHashing[position].getKey().hashCode()==key.hashCode())
+					if(doubleHashing[position].getKey().equals(key))
 					{
 						doubleHashing[position].setValue(value);
 						return;
@@ -107,7 +107,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 					index = ( index + v ) % slotNumber;
 					if(doubleHashing[index]!=null)
 					{
-						if(doubleHashing[index].getKey().hashCode()==key.hashCode())
+						if(doubleHashing[index].getKey().equals(key))
 						{
 							doubleHashing[index].setValue(value);
 							return ;
@@ -150,7 +150,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 			if(!tombstone[position])
 				return null;
 		} else {
-			if(doubleHashing[position].getKey().hashCode()==key.hashCode())
+			if(doubleHashing[position].getKey().equals(key))
 				return doubleHashing[position].getValue();
 		}
 
@@ -164,7 +164,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 					return null;
 
 			} else {
-				if(doubleHashing[index].getKey().hashCode()==key.hashCode())
+				if(doubleHashing[index].getKey().equals(key))
 					return doubleHashing[index].getValue();
 			}
 		}
@@ -180,7 +180,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 		int position = hashFunction(key);
 		if(doubleHashing[position]!=null)
 		{
-			if(doubleHashing[position].getKey().hashCode()==key.hashCode())
+			if(doubleHashing[position].getKey().equals(key))
 			{
 				doubleHashing[position] = null;
 				tombstone[position] = true;
@@ -194,7 +194,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 			index = ( index + v ) % slotNumber;
 			if(doubleHashing[index]==null)
 			{
-				if(doubleHashing[index].getKey().hashCode()==key.hashCode())
+				if(doubleHashing[index].getKey().equals(key))
 				{
 					doubleHashing[index] = null;
 					tombstone[index] = true;
@@ -214,7 +214,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 			if(!tombstone[position])
 				return false;
 		} else {
-			if(doubleHashing[position].getKey().hashCode()==key.hashCode())
+			if(doubleHashing[position].getKey().equals(key))
 				return true;
 		}
 		int v = doubleFunction(position);
@@ -227,7 +227,7 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 					return false;
 
 			} else {
-				if(doubleHashing[index].getKey().hashCode()==key.hashCode())
+				if(doubleHashing[index].getKey().equals(key))
 					return true;
 			}
 		}

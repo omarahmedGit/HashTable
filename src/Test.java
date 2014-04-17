@@ -1,74 +1,165 @@
+import hashTable.*;
+
+import java.util.BitSet;
+import java.util.Iterator;
 import java.util.Random;
 
-import hashTable.*;
 
 public class Test {
 
 	public static void main(String[] args) {
-		HashTable<Integer, String> hashtable = new SeparateChaining<Integer,String>();
+		//init hashtable
+		HashTable<Integer, String> map = new Bucketing<Integer, String>();
 		
-		/*
-		hashtable.put(4,"omar1");
-		System.out.println((String)hashtable.get(4));
-		System.out.println(hashtable.contains(4));
-		System.out.println(hashtable.size());
-		System.out.println(hashtable.isEmpty());
+		int grade = 0;
 		
-		System.out.println();
+		//Empty hash table test
+		System.out.println("Testing Empty HashTable");
 		
-		hashtable.delete(4);
-		System.out.println(hashtable.get(4));
-		System.out.println(hashtable.contains(4));
-		System.out.println(hashtable.size());
-		System.out.println(hashtable.isEmpty());
+		if (map.isEmpty()) {
+			grade += 1;
+			System.out.println("Testing isEmpty (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing isEmpty (1) ... FAIL");
+		}
 		
-		System.out.println();
+		if (map.size() == 0) {
+			grade += 1;
+			System.out.println("Testing size (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing size (1) ... FAIL");
+		}
 		
-		hashtable.put(4,"omar2");
-		System.out.println((String)hashtable.get(4));
-		System.out.println(hashtable.contains(4));
-		System.out.println(hashtable.size());
-		System.out.println(hashtable.isEmpty());
+		if (map.get(1) == null) {
+			grade += 1;
+			System.out.println("Testing get (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing get (1) ... FAIL");
+		}
 		
+		if (map.contains(1) == false) {
+			grade += 1;
+			System.out.println("Testing contains (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing contains (1) ... FAIL");
+		}
 		
-		System.out.println();
+		if (map.keys().iterator().hasNext() == false) {
+			grade += 1;
+			System.out.println("Testing keys (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing keys (1) ... FAIL");
+		}
 		
-		hashtable.put(3,"omar3");
-		System.out.println((String)hashtable.get(3));
-		System.out.println(hashtable.contains(3));
-		System.out.println(hashtable.size());
-		System.out.println(hashtable.isEmpty());
-		
-		System.out.println();
-		*/
-		String[] names = {"omar","omar2","omar3","omar4","omar5"};
-		
+		// Adding data to the HashTable
+		System.out.println("Adding Data to HashTable");
+		BitSet keysMap = new BitSet(1000000);
 		Random r = new Random();
-		
-		for(int i=0;i<1000;i++)
-		{	
-			int index = Math.abs(r.nextInt(1000));
-			
-			hashtable.put(index, names[0]+""+i);
-			
-			System.out.println(hashtable.get(i));
-			System.out.println(hashtable.size());
+		int unique = 0;
+		for (int i = 0; i < 500000; i++) {
+			int k = r.nextInt(1000000);
+			if (! keysMap.get(k)) {
+				unique++;
+			}
+			map.put(k, k+"");
+			keysMap.set(k);
 		}
 		
-		for (int i = 0; i < 1000; i++) {
-			System.out.println(hashtable.get(i));
+		if (! map.isEmpty()) {
+			grade += 1;
+			System.out.println("Testing isEmpty (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing isEmpty (1) ... FAIL");
+		}
+		if (map.size() == unique) {
+			grade += 1;
+			System.out.println("Testing size (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing size (1) ... FAIL");
+		}
+		//Testing get
+		int k = -1;
+		while (k == -1) {
+			int rand = r.nextInt(1000000);
+			k = keysMap.nextSetBit(rand);
+		}
+		if (map.get(k) != null && map.get(k).equals(k+"")) {
+			grade += 1;
+			System.out.println("Testing get (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing get (1) ... FAIL");
 		}
 		
+		k = -1;
+		while (k == -1) {
+			int rand = r.nextInt(1000000);
+			k = keysMap.nextClearBit(rand);
+		}
+		if (map.get(k) == null) {
+			grade += 1;
+			System.out.println("Testing get (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing get (1) ... FAIL");
+		}
+		//Testing contains
+		k = -1;
+		while (k == -1) {
+			int rand = r.nextInt(1000000);
+			k = keysMap.nextSetBit(rand);
+		}
+		if (map.contains(k)) {
+			grade += 1;
+			System.out.println("Testing contains (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing contains (1) ... FAIL");
+		}
 		
-		System.out.println("Number of slots");
-		System.out.println(hashtable.getMemoryInfo());
-		System.out.println(hashtable.size());
-		System.out.println(hashtable.collisonsNumber());
+		k = -1;
+		while (k == -1) {
+			int rand = r.nextInt(1000000);
+			k = keysMap.nextClearBit(rand);
+		}
+		if (map.contains(k) == false) {
+			grade += 1;
+			System.out.println("Testing contains (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing contains (1) ... FAIL");
+		}
 		
+		//Testing Delete
+		int size = map.size();
+		k = -1;
+		while (k == -1) {
+			int rand = r.nextInt(1000000);
+			k = keysMap.nextSetBit(rand);
+		}
+		if (keysMap.get(k)) {
+			map.delete(k);
+			if (map.get(k) == null && map.size() == size-1) {
+				grade += 2;
+				keysMap.clear(k);
+				System.out.println("Testing delete (1) ... SUCCESS");
+			} else {
+				System.out.println("Testing delete (1) ... FAIL");
+			}
+		} else {
+			System.out.println("Testing delete (1) ... ERROR");
+		}
 		
+		//Testing Keys
+		Iterator<Integer> it = map.keys().iterator();
+		while (it.hasNext()) {
+			int w = it.next();
+			keysMap.clear(w);
+		}
+		if (keysMap.cardinality() == 0) {
+			grade += 2;
+			System.out.println("Testing keys (1) ... SUCCESS");
+		} else {
+			System.out.println("Testing keys (1) ... FAIL");
+		}
 		
-		
-		
+		System.out.println("Grade = " + grade + " / 15");
 	}
 
 }

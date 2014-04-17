@@ -52,7 +52,7 @@ public class PseudoRandomProbing<K,V> implements HashTable<K, V> {
 		return true;
 	}
 
-	private void rehashing(HashTableNode<K,V>[] hashtable,int[] premutation)
+	private void rehashing(HashTableNode<K,V>[] hashtable,int[] permutation)
 	{
 		Iterator<K> itr = keys().iterator();
 		K key ;
@@ -66,7 +66,7 @@ public class PseudoRandomProbing<K,V> implements HashTable<K, V> {
 			} else {
 				int v ;
 				for (int i=1;i<slotnumberfunction;i++) {
-					v = ( perm[i] + position ) % slotnumberfunction ;
+					v = ( permutation[i] + position ) % slotnumberfunction ;
 					if(hashtable[v]==null)
 					{
 						hashtable[v] = new HashTableNode<K,V>(key,get(key));

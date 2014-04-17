@@ -56,23 +56,23 @@ public class SeparateChaining<K,V> implements HashTable<K, V> {
 			int position = hashFunction(key);
 			
 			// boolean to check if the element is already existed in the hash table
-			// a better way to imlement is to call contians function to check if the
-			// element is already exsited in the hash table instead of hard code it
+			// a better way to implement is to call contains function to check if the
+			// element is already existed in the hash table instead of hard code it
 			boolean checkIfExcisted = false;
 			
-			// iterate over the array and check if the element existes
+			// iterate over the array and check if the element exists
 			for(HashTableNode<K,V> node : list[position])
 			{
-				if(node.getKey().hashCode()==key.hashCode()){
+				if(node.getKey().equals(key)){
 					checkIfExcisted = true;
 					node.setValue(value);
 					break;
 				}
 				// increment the number of collision because we hit a wrong place
-				// in ohter words a collision occared
+				// in other words a collision occurred
 				++collisions;
 			}
-			// if not exsited (checkIfExcisted==false) then add it the slote number linked list
+			// if not existed (checkIfExcisted==false) then add it the slot number linked list
 			if(!checkIfExcisted){
 				elementsNumber++;
 				list[position].add(new HashTableNode<K,V>(key,value));
@@ -83,31 +83,31 @@ public class SeparateChaining<K,V> implements HashTable<K, V> {
 			// make the array bigger by the increment factor and then re-hashing
 			int newSize = getListSize()*increment_factor;
 			
-			// constract the new linked list of the hash table
+			// Construct the new linked list of the hash table
 			@SuppressWarnings("unchecked")
 			LinkedList<HashTableNode<K,V>>[] linkedLists = (LinkedList<HashTableNode<K,V>>[])new LinkedList[newSize];
-			slotNumberFunction = newSize; // must be before the @hashInNewList becasue it depends on @slotNumber
+			slotNumberFunction = newSize; // must be before the @hashInNewList because it depends on @slotNumber
 			
-			// applay rehashing 
+			// apply rehashing 
 			rehashing(linkedLists);
 			
 			// assign the pointers to the new hash table
 			slotNumber = newSize;
 			list = linkedLists;
-			// applay put function after rehashing on the new hash table
+			// apply put function after rehashing on the new hash table
 			put(key,value);
 		}
 	}
 
 	@Override
 	public V get(K key) {
-		// applay the hash function on the key
+		// apply the hash function on the key
 		int position = hashFunction(key);
 
 		// check if the key is already existed in the hash table
 		for(HashTableNode<K,V> x: list[position])
 		{
-			if(x.getKey().hashCode()==key.hashCode())
+			if(x.getKey().equals(key))
 				return x.getValue();
 		}
 		// not found return null
@@ -116,15 +116,15 @@ public class SeparateChaining<K,V> implements HashTable<K, V> {
 
 	@Override
 	public void delete(K key) {
-		// applay the hash function on the key
+		// apply the hash function on the key
 		int position = hashFunction(key);
 
 		// iterate over the hash table to check if existed delete it
 		for (int i=0;i<list[position].size();i++) {
-			if(list[position].get(i).getKey().hashCode()==key.hashCode())
+			if(list[position].get(i).getKey().equals(key))
 			{
 				list[position].remove(i);
-				// decrese the elements number after deletion
+				// Decreasing the elements number after deletion
 				--elementsNumber;
 				break;
 			}
@@ -137,14 +137,14 @@ public class SeparateChaining<K,V> implements HashTable<K, V> {
 		// apply the hash function on the key
 		int position = hashFunction(key);
 
-		// iterate over the hash table and check if exsited
+		// iterate over the hash table and check if existed
 		for(HashTableNode<K,V> x: list[position])
 		{
-			// if exsited return true
-			if(x.getKey().hashCode()==key.hashCode())
+			// if existed return true
+			if(x.getKey().equals(key))
 				return true;
 		}
-		// not exsited return false
+		// not existed return false
 		return false;
 	}
 
@@ -192,7 +192,7 @@ public class SeparateChaining<K,V> implements HashTable<K, V> {
 	// memory used in the hash table
 	@Override
 	public int getMemoryInfo() {
-		
+		int mem_size = 0;
 		for(int i=0;i<list.length;i++)
 			mem_size += (list[i].size()==0?1:list[i].size());
 

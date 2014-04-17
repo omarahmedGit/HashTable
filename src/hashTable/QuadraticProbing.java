@@ -84,7 +84,7 @@ public class QuadraticProbing<K,V> implements HashTable<K, V> {
 				for (int i=1;i<slotNumber;i++) {
 					int v = Qfunction(position,i);
 					if(qProb[v]!=null)
-						if(qProb[v].getKey().hashCode()==key.hashCode())
+						if(qProb[v].getKey().equals(key))
 						{
 							qProb[v].setValue(value);
 							return ;
@@ -118,7 +118,7 @@ public class QuadraticProbing<K,V> implements HashTable<K, V> {
 			int v = Qfunction(position,i);
 			if(qProb[v]!=null)
 			{
-				if(qProb[v].getKey().hashCode()==key.hashCode())
+				if(qProb[v].getKey().equals(key))
 					return qProb[v].getValue();
 			}
 		}
@@ -136,7 +136,7 @@ public class QuadraticProbing<K,V> implements HashTable<K, V> {
 			int v = Qfunction(position,i);
 			if(qProb[v]!=null)
 			{
-				if(qProb[v].getKey().hashCode()==key.hashCode())
+				if(qProb[v].getKey().equals(key))
 				{
 					qProb[v]=null;
 					tombstone[v]=true;
@@ -161,7 +161,7 @@ public class QuadraticProbing<K,V> implements HashTable<K, V> {
 					return false;
 
 			} else {
-				if(qProb[v].getKey().hashCode()==key.hashCode())
+				if(qProb[v].getKey().equals(key))
 					return true;
 			}
 		}
