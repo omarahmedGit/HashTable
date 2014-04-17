@@ -78,7 +78,6 @@ public class DoubleHashing<K,V> implements HashTable<K, V> {
 			@SuppressWarnings("unchecked")
 			HashTableNode<K,V>[] list = (HashTableNode<K, V>[])new HashTableNode[newSize];
 			slotnumberfunction = newSize ;
-			collisions = 0;
 			rehashing(list);
 
 			doubleHashing = list ;

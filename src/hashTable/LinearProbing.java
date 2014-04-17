@@ -62,7 +62,6 @@ public class LinearProbing<K,V> implements HashTable<K, V> {
 			@SuppressWarnings("unchecked")
 			HashTableNode<K,V>[] newlist = (HashTableNode<K, V>[])new HashTableNode[newSize];
 			slotnumberfunction = newSize;
-			collisions = 0;
 			rehashing(newlist);
 
 			prob = newlist;

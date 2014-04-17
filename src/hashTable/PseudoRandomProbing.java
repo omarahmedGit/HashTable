@@ -89,7 +89,6 @@ public class PseudoRandomProbing<K,V> implements HashTable<K, V> {
 			int[] newperm = new int[newSize];
 			generate_random_permutation(newperm);
 			slotnumberfunction = newSize ;
-			collisions = 0;
 			rehashing(newlist,newperm);
 
 			slotNumber = newSize;
